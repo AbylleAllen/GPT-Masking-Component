@@ -1,0 +1,30 @@
+{
+  "documentId": "aadhaar-0001",
+  "inputFileUri": "C:/Users/Allen/OneDrive - Abylle Solutions Pvt Ltd/Desktop/test123/back.png",
+  "documentPassword": null,
+  "documentType": "AADHAR",
+  "extractedFields": [
+    {
+      "field": "aadhaar_number",
+      "value": "1234 5678 9012",
+      "confidence": 0.98,
+      "boundingBoxes": {
+        "p0": [295, 489],
+        "p1": [626, 485],
+        "p2": [627, 526],
+        "p3": [296, 530]
+      }
+    }
+  ],
+  "maskingRules": [
+    {
+      "field": "aadhaar_number",
+      "type": "PARTIAL",
+      "maskingConfig": {
+        "maskFirst": 6,
+        "maskLast": 0,
+        "maskChar": "X"
+      }
+    }
+  ]
+}

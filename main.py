@@ -1,7 +1,8 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, UploadFile, File
 from urllib.parse import urlparse
 from pathlib import Path
 import uuid
+import json
 
 from identification.doc_identifier import identifyTypeAndParentDirectory
 from conversion.doc_converter import convertToImage
@@ -108,6 +109,22 @@ async def mask_document(request: MaskingRequest):
         return processMasking(request)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+    
+@app.post("/test", response_model=MaskingResponse)
+async def test_upload(file: UploadFile = File(...)):
+    """
+    Accepts a JSON file containing a MaskingRequest and runs the masking pipeline.
+    """
+    if not file.filename.endswith(".json"):
+        raise HTTPException(status_code=400, detail="Only JSON files are allowed")
+
+    try:
+        content = await file.read()
+        data = json.loads(content)
+        request = MaskingRequest.parse_obj(data)
+        return processMasking(request)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to process JSON: {e}")
 
 
 @app.get("/health")
