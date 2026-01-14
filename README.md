@@ -202,13 +202,69 @@ This ensures:
 ## 🚀 Running the Service
 
 ```bash
-uvicorn app:app --host 0.0.0.0 --port 8000 --reload
+# Run the FastAPI app (uses `main:app`)
+uvicorn main:app --host 0.0.0.0 --port 8004 --reload
 ```
 
 Access Swagger UI:
 
 ```bash
-http://localhost:8000/docs
+http://localhost:8004/docs
+```
+
+---
+
+### Example: API Usage & Sample Request
+
+#### POST /mask (application/json)
+
+Upload the JSON payload:
+
+```bash
+curl -s -X POST "http://localhost:8004/mask" \
+  -H "Content-Type: application/json" \
+  -d @sample_request.json
+```
+
+Sample JSON payload (save as `sample_request.json`):
+
+```json
+{
+  "documentId": "doc-123",
+  "inputFileUri": "file:///C:/Users/Allen/Desktop/test123/back.png",
+  "documentPassword": null,
+  "documentType": "AADHAR",
+  "extractedFields": [
+    {
+      "field": "aadhaar_number",
+      "value": "1234 5678 9012",
+      "confidence": 0.98,
+      "boundingBoxes": {
+        "p0": [100, 150],
+        "p1": [400, 150],
+        "p2": [400, 200],
+        "p3": [100, 200]
+      }
+    }
+  ],
+  "maskingRules": [
+    {
+      "field": "aadhaar_number",
+      "type": "PARTIAL",
+      "maskingConfig": {
+        "maskFirst": 6,
+        "maskLast": 0,
+        "maskChar": "X"
+      }
+    }
+  ]
+}
+```
+
+#### POST /test (upload request JSON file)
+
+```bash
+curl -s -X POST "http://localhost:8004/test" -F "file=@sample_request.json"
 ```
 
 ## 🔮 Extensibility
